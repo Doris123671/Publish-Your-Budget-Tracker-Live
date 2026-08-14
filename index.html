@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A beautiful, responsive budget tracker designed to help you manage your expenses with ease. Built with HTML, CSS, and JavaScript. No calculations yet—coming soon with JavaScript!">
+<meta name="keywords" content="budget tracker, expense manager, finance, dashboard">
+<meta name="author" content="Your Name">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://doris123671.github.io/Publish-Your-Budget-Tracker-Live/">
+<meta property="og:title" content="Budget Tracker">
+<meta property="og:description" content="A beautiful, responsive budget tracker designed to help you manage your expenses with ease.">
+<meta property="og:image" content="https://doris123671.github.io/Publish-Your-Budget-Tracker-Live/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://doris123671.github.io/Publish-Your-Budget-Tracker-Live/">
+<meta property="twitter:title" content="Budget Tracker">
+<meta property="twitter:description" content="A beautiful, responsive budget tracker designed to help you manage your expenses with ease.">
+<meta property="twitter:image" content="https://doris123671.github.io/Publish-Your-Budget-Tracker-Live/og-image.png">
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+
+<title>Budget Tracker - Manage Your Expenses Beautifully</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --ink:        #16213D;
+    --ink-soft:   #5A6482;
+    --ink-faint:  #98A0BC;
+    --paper:      #F6F7FB;
+    --paper-alt:  #ECEEF6;
+    --card:       #FFFFFF;
+    --line:       #E1E4F0;
+
+    --violet:     #6C5CE7;
+    --violet-tint:#EFEBFD;
+    --teal:       #17A398;
+    --teal-tint:  #E4F5F3;
+    --coral:      #FF5D5D;
+    --coral-tint: #FFE9E9;
+    --amber:      #F2A93B;
+    --amber-tint: #FDF1DF;
+    --pink:       #E85D9E;
+    --pink-tint:  #FCE9F3;
+    --green:      #3FB65F;
+    --green-tint: #E6F6E9;
+
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+    --shadow: 0 1px 2px rgba(22,33,61,.04), 0 8px 24px -12px rgba(22,33,61,.12);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:var(--font-display); margin:0; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  button{ font-family:inherit; cursor:pointer; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--violet); color:#fff; }
+  :focus-visible{ outline:2.5px solid var(--violet); outline-offset:2px; border-radius:6px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+
+  /* ============ SHELL ============ */
+  .app{ display:grid; grid-template-columns:236px 1fr; min-height:100vh; }
+
+  /* ---- sidebar ---- */
+  .sidebar{
+    background:var(--ink); color:#fff; padding:22px 16px;
+    display:flex; flex-direction:column; gap:26px;
+    position:sticky; top:0; height:100vh;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; padding:0 6px; }
+  .brand__mark{
+    width:34px; height:34px; border-radius:9px; background:var(--violet);
+    display:grid; place-items:center; font-size:17px; flex:none;
+  }
+  .brand__name{ font-family:var(--font-display); font-weight:700; font-size:18px; }
+  .brand__tag{ font-size:11px; color:#9BA3C8; margin-top:1px; }
+
+  .nav{ display:flex; flex-direction:column; gap:3px; }
+  .nav__link{
+    display:flex; align-items:center; gap:12px; padding:10px 12px;
+    border-radius:10px; color:#C3C8E4; font-size:14.5px; font-weight:500;
+    position:relative; border:none; background:transparent; text-align:left; width:100%;
+  }
+  .nav__link svg{ width:19px; height:19px; flex:none; }
+  .nav__link:hover{ background:rgba(255,255,255,.06); color:#fff; }
+  .nav__link.is-active{ background:rgba(108,92,231,.22); color:#fff; }
+  .nav__link.is-active::before{
+    content:""; position:absolute; left:-16px; top:8px; bottom:8px; width:4px;
+    background:var(--violet); border-radius:0 4px 4px 0;
+  }
+  .nav__badge{
+    margin-left:auto; background:var(--coral); color:#fff; font-size:10.5px;
+    font-weight:700; padding:1px 6px; border-radius:20px; font-family:var(--font-mono);
+  }
+
+  .sidebar__spacer{ flex:1; }
+  .sidebar__user{
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    background:rgba(255,255,255,.06); border-radius:12px;
+  }
+  .avatar{
+    width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--violet),var(--pink));
+    display:grid; place-items:center; font-weight:700; font-size:13px; color:#fff; flex:none;
+  }
+  .sidebar__user small{ display:block; color:#9BA3C8; font-size:11px; }
+  .sidebar__user strong{ font-size:13px; font-weight:600; }
+
+  .menu-toggle{ display:none; }
+
+  /* ---- main column ---- */
+  .main{ min-width:0; }
+  .topbar{
+    display:flex; align-items:center; gap:16px; padding:20px 32px;
+    position:sticky; top:0; background:rgba(246,247,251,.9); backdrop-filter:blur(8px);
+    z-index:5; border-bottom:1px solid transparent;
+  }
+  .topbar__greeting h1{ font-size:21px; font-weight:600; }
+  .topbar__greeting p{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+  .search{
+    margin-left:auto; display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line); border-radius:11px;
+    padding:9px 14px; width:280px; box-shadow:var(--shadow);
+  }
+  .search svg{ width:16px; height:16px; color:var(--ink-faint); flex:none; }
+  .search input{ border:none; outline:none; background:transparent; font-size:13.5px; width:100%; font-family:inherit; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:11px; border:1px solid var(--line);
+    background:var(--card); display:grid; place-items:center; box-shadow:var(--shadow); position:relative;
+  }
+  .icon-btn svg{ width:17px; height:17px; }
+  .icon-btn__dot{ position:absolute; top:8px; right:8px; width:7px; height:7px; border-radius:50%; background:var(--coral); border:1.5px solid var(--card); }
+
+  section.wrap{ padding:6px 32px 8px; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+  .section-head h2{ font-size:16.5px; font-weight:600; }
+  .section-head .muted{ font-size:12.5px; color:var(--ink-soft); }
+
+  /* ============ SIGNATURE: TODAY RIBBON ============ */
+  .ribbon-card{
+    background:var(--ink); border-radius:var(--radius-lg); padding:22px 24px 26px;
+    color:#fff; position:relative; overflow:hidden; margin-top:8px;
+  }
+  .ribbon-card::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background:radial-gradient(600px 200px at 85% -20%, rgba(108,92,231,.35), transparent 70%);
+  }
+  .ribbon-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; position:relative; z-index:1; }
+  .ribbon-head h2{ color:#fff; font-size:17px; }
+  .ribbon-head .eyebrow{ font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; color:var(--amber); text-transform:uppercase; margin-bottom:4px; }
+  .ribbon-status{ font-size:12.5px; color:#B7BCDD; font-family:var(--font-mono); }
+
+  .ribbon-track{
+    position:relative; display:flex; gap:6px; margin-top:20px;
+    padding-top:22px; overflow-x:auto; scrollbar-width:none;
+  }
+  .ribbon-track::-webkit-scrollbar{ display:none; }
+  .ribbon-scale{ position:absolute; top:0; left:0; right:0; height:16px; display:flex; font-family:var(--font-mono); font-size:10.5px; color:#8992BC; }
+
+  .period{
+    flex:1 1 0; min-width:108px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);
+    border-radius:12px; padding:10px 12px; position:relative; transition:transform .15s ease;
+  }
+  .period:hover{ transform:translateY(-2px); }
+  .period.is-past{ opacity:.42; }
+  .period.is-now{
+    background:rgba(255,255,255,.12); border-color:var(--amber);
+    box-shadow:0 0 0 1px var(--amber), 0 10px 24px -10px rgba(242,169,59,.5);
+  }
+  .period__dot{ width:8px; height:8px; border-radius:50%; margin-bottom:8px; }
+  .period__subject{ font-weight:600; font-size:13.5px; }
+  .period__meta{ font-family:var(--font-mono); font-size:10.5px; color:#AFB5D8; margin-top:5px; }
+  .period__now-chip{
+    position:absolute; top:-11px; left:10px; background:var(--amber); color:#3A2A00;
+    font-family:var(--font-mono); font-size:9.5px; font-weight:700; padding:2px 7px;
+    border-radius:20px; letter-spacing:.04em; animation:pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
+
+  /* ============ STATS ============ */
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:22px; }
+  .stat-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:16px 18px; box-shadow:var(--shadow);
+  }
+  .stat-card__top{ display:flex; align-items:center; justify-content:space-between; }
+  .stat-card__icon{ width:30px; height:30px; border-radius:9px; display:grid; place-items:center; }
+  .stat-card__icon svg{ width:15px; height:15px; }
+  .stat-card__num{ font-family:var(--font-display); font-size:26px; font-weight:700; margin-top:12px; }
+  .stat-card__label{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ============ BOARD ============ */
+  .filters{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .chip{
+    border:1px solid var(--line); background:var(--card); padding:6px 13px; border-radius:20px;
+    font-size:12.5px; font-weight:500; color:var(--ink-soft); display:flex; align-items:center; gap:6px;
+  }
+  .chip__dot{ width:7px; height:7px; border-radius:50%; }
+  .chip.is-active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .chip.is-active .chip__dot{ box-shadow:0 0 0 2px rgba(255,255,255,.3); }
+
+  .board{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
+  .column{ background:var(--paper-alt); border-radius:var(--radius-lg); padding:14px; min-height:120px; }
+  .column__head{ display:flex; align-items:center; justify-content:space-between; padding:4px 6px 12px; }
+  .column__head h3{ font-size:13.5px; font-weight:600; }
+  .column__count{
+    font-family:var(--font-mono); font-size:11px; background:var(--card); border:1px solid var(--line);
+    padding:1px 8px; border-radius:20px; color:var(--ink-soft);
+  }
+  .column__list{ display:flex; flex-direction:column; gap:10px; min-height:40px; }
+  .column__empty{ font-size:12px; color:var(--ink-faint); text-align:center; padding:18px 4px; border:1.5px dashed var(--line); border-radius:12px; }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:13px 14px; box-shadow:var(--shadow); cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .card:hover{ transform:translateY(-2px); box-shadow:0 4px 6px rgba(22,33,61,.05), 0 14px 28px -12px rgba(22,33,61,.18); }
+  .card__top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+  .tag{ font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px; letter-spacing:.02em; }
+  .card__due{ font-family:var(--font-mono); font-size:10.5px; font-weight:500; }
+  .card__due.is-overdue{ color:var(--coral); font-weight:700; }
+  .card__title{ font-size:13.5px; font-weight:600; line-height:1.35; margin-bottom:10px; }
+  .card__bar{ height:5px; border-radius:20px; background:var(--paper-alt); overflow:hidden; }
+  .card__bar-fill{ height:100%; border-radius:20px; }
+  .card__foot{ display:flex; align-items:center; justify-content:space-between; margin-top:9px; }
+  .card__room{ font-size:11px; color:var(--ink-faint); }
+  .card__action{
+    font-size:11px; font-weight:700; background:var(--paper-alt); border:none; padding:5px 10px;
+    border-radius:8px; color:var(--ink);
+  }
+  .card__action:hover{ background:var(--ink); color:#fff; }
+
+  /* ============ COURSES ============ */
+  .courses{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .course{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:16px; box-shadow:var(--shadow); display:flex; gap:14px; align-items:center;
+  }
+  .ring{
+    width:56px; height:56px; border-radius:50%; flex:none; display:grid; place-items:center;
+    background:conic-gradient(var(--c) calc(var(--p)*1%), var(--paper-alt) 0);
+  }
+  .ring__hole{ width:41px; height:41px; border-radius:50%; background:var(--card); display:grid; place-items:center; font-family:var(--font-mono); font-size:11px; font-weight:600; }
+  .course__body h3{ font-size:14px; font-weight:600; }
+  .course__body p{ font-size:11.5px; color:var(--ink-soft); margin-top:3px; }
+  .course__next{ font-size:10.5px; color:var(--ink-faint); margin-top:5px; font-family:var(--font-mono); }
+
+  footer{ text-align:center; padding:34px 20px 40px; font-size:12px; color:var(--ink-faint); }
+
+  /* ============ MODAL ============ */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(22,33,61,.45); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+  }
+  .modal-overlay.is-open{ display:flex; }
+  .modal{
+    background:var(--card); border-radius:var(--radius-lg); max-width:420px; width:100%;
+    padding:24px; box-shadow:0 30px 60px -20px rgba(22,33,61,.35);
+  }
+  .modal__top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+  .modal__close{ border:none; background:var(--paper-alt); width:28px; height:28px; border-radius:8px; display:grid; place-items:center; }
+  .modal h3{ font-size:17px; margin-bottom:6px; }
+  .modal p.desc{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:16px; }
+  .modal__row{ display:flex; justify-content:space-between; font-size:12.5px; padding:9px 0; border-top:1px solid var(--line); color:var(--ink-soft); }
+  .modal__row strong{ color:var(--ink); font-weight:600; }
+  .modal__cta{
+    width:100%; margin-top:16px; padding:11px; border:none; border-radius:11px;
+    background:var(--violet); color:#fff; font-weight:600; font-size:13.5px;
+  }
+  .modal__cta:hover{ background:#5A4CD6; }
+  .modal__cta[disabled]{ background:var(--green); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1080px){
+    .board{ grid-template-columns:1fr; }
+    .courses{ grid-template-columns:repeat(2,1fr); }
+    .stats{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:840px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{
+      position:fixed; z-index:40; width:236px; transform:translateX(-100%);
+      transition:transform .2s ease;
+    }
+    .sidebar.is-open{ transform:translateX(0); }
+    .menu-toggle{
+      display:grid; place-items:center; width:38px; height:38px; border-radius:11px;
+      border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow);
+    }
+    .search{ display:none; }
+    .courses{ grid-template-columns:1fr; }
+    section.wrap, .topbar{ padding-left:18px; padding-right:18px; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand__mark">💰</div>
+      <div>
+        <div class="brand__name">Budget Tracker</div>
+        <div class="brand__tag">manage your money</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav__link is-active" data-scroll="#top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
+        Dashboard
+      </button>
+      <button class="nav__link" data-scroll="#courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V4Z"/><path d="M5 17h13"/></svg>
+        Categories
+      </button>
+      <button class="nav__link" data-scroll="#board">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+        Expenses
+        <span class="nav__badge" id="dueBadge">0</span>
+      </button>
+      <button class="nav__link" data-scroll="#stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+        Summary
+      </button>
+      <button class="nav__link" data-scroll="#top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8 3v4M16 3v4"/></svg>
+        Budget Plan
+      </button>
+      <button class="nav__link" data-scroll="#top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H8l-4 4Z"/></svg>
+        Reports
+      </button>
+    </nav>
+
+    <div class="sidebar__spacer"></div>
+    <div class="sidebar__user">
+      <div class="avatar">BT</div>
+      <div>
+        <strong>Budget Tracker</strong>
+        <small>v1.0 · HTML/CSS</small>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main" id="top">
+
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="topbar__greeting">
+        <h1 id="greeting">Good morning</h1>
+        <p id="dateLine"></p>
+      </div>
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Search expenses…">
+      </label>
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+        <span class="icon-btn__dot"></span>
+      </button>
+    </header>
+
+    <!-- TODAY RIBBON -->
+    <section class="wrap">
+      <div class="ribbon-card">
+        <div class="ribbon-head">
+          <div>
+            <div class="eyebrow">Today's balance</div>
+            <h2>Where your money stands</h2>
+          </div>
+          <div class="ribbon-status" id="ribbonStatus">—</div>
+        </div>
+        <div class="ribbon-track" id="ribbonTrack"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="wrap" id="stats">
+      <div class="stats" id="statsGrid"></div>
+    </section>
+
+    <!-- BOARD -->
+    <section class="wrap" id="board" style="margin-top:8px;">
+      <div class="section-head">
+        <h2>Expenses</h2>
+        <span class="muted">Click a card to view details</span>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="board" id="boardGrid"></div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="wrap" id="courses" style="margin-top:26px;">
+      <div class="section-head">
+        <h2>Spending by Category</h2>
+        <span class="muted">6 categories tracked</span>
+      </div>
+      <div class="courses" id="coursesGrid"></div>
+    </section>
+
+    <footer>Budget Tracker · manage your expenses beautifully · Coming soon: Full calculation features!</footer>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const SUBJECTS = {
+  Groceries: { color:'var(--violet)', tint:'var(--violet-tint)', var:'--violet' },
+  Transport: { color:'var(--teal)',   tint:'var(--teal-tint)',   var:'--teal'   },
+  Dining:    { color:'var(--coral)',  tint:'var(--coral-tint)',  var:'--coral'  },
+  Shopping:  { color:'var(--amber)',  tint:'var(--amber-tint)',  var:'--amber'  },
+  Utilities: { color:'var(--pink)',   tint:'var(--pink-tint)',   var:'--pink'   },
+  Entertainment: { color:'var(--green)',  tint:'var(--green-tint)',  var:'--green'  },
+};
+
+const SCHEDULE = [
+  { subject:'Groceries',    start:'08:00', end:'08:50', teacher:'Weekly Shop',  room:'Safeway' },
+  { subject:'Transport', start:'08:55', end:'09:45', teacher:'Uber',   room:'City Center' },
+  { subject:'Dining', start:'09:50', end:'10:40', teacher:'Lunch',    room:'Downtown' },
+  { subject:'Shopping', start:'11:00', end:'11:50', teacher:'Mall',    room:'Central' },
+  { subject:'Utilities', start:'12:40', end:'13:20', teacher:'Electric',     room:'Online' },
+  { subject:'Entertainment',      start:'13:25', end:'14:10', teacher:'Movies', room:'Downtown' },
+];
+
+let assignments = [
+  { id:1, subject:'Groceries',    title:'Weekly grocery shopping',      status:'todo',  progress:0,  offset:1,  room:'Safeway',     grade:null },
+  { id:2, subject:'Transport', title:'Taxi to office',               status:'doing', progress:40, offset:2,  room:'City Center',   grade:null },
+  { id:3, subject:'Dining', title:'Lunch with friends',    status:'todo',  progress:0,  offset:-1, room:'Downtown',     grade:null },
+  { id:4, subject:'Shopping', title:'New shoes purchase',                  status:'doing', progress:70, offset:0,  room:'Central',     grade:null },
+  { id:5, subject:'Utilities', title:'Monthly electricity bill',                status:'done',  progress:100,offset:-3, room:'Online',  grade:94 },
+  { id:6, subject:'Groceries',    title:'Fresh produce',            status:'done',  progress:100,offset:-5, room:'Safeway',     grade:88 },
+  { id:7, subject:'Entertainment',      title:'Movie tickets',                     status:'todo',  progress:0,  offset:5,  room:'Downtown',   grade:null },
+  { id:8, subject:'Transport', title:'Uber fare to airport',             status:'done',  progress:100,offset:-2, room:'City Center',   grade:97 },
+  { id:9, subject:'Dining', title:'Coffee meet-up',                     status:'doing', progress:20, offset:3,  room:'Downtown',     grade:null },
+];
+
+let activeFilter = 'all';
+let searchTerm = '';
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+
+function dueDate(offset){
+  const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()+offset);
+  return d;
+}
+function dueLabel(offset, status){
+  if(status==='done') return { text:'Recorded', overdue:false };
+  if(offset < 0) return { text:`${Math.abs(offset)}d ago`, overdue:true };
+  if(offset === 0) return { text:'Today', overdue:false };
+  if(offset === 1) return { text:'Tomorrow', overdue:false };
+  return { text:`In ${offset}d`, overdue:false };
+}
+
+/* ============================================================
+   RIBBON — today's balance
+   ============================================================ */
+function renderRibbon(){
+  const track = $('#ribbonTrack');
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  const dayStart = toMin(SCHEDULE[0].start);
+  const dayEnd = toMin(SCHEDULE[SCHEDULE.length-1].end);
+
+  track.innerHTML = SCHEDULE.map(p => {
+    const s = toMin(p.start), e = toMin(p.end);
+    const meta = SUBJECTS[p.subject];
+    const isNow = nowMin >= s && nowMin <= e;
+    const isPast = nowMin > e;
+    return `
+      <div class="period ${isNow?'is-now':''} ${isPast?'is-past':''}" style="flex-basis:${(e-s)}px;">
+        ${isNow ? '<div class="period__now-chip">NOW</div>' : ''}
+        <div class="period__dot" style="background:${meta.color}"></div>
+        <div class="period__subject">${p.subject}</div>
+        <div class="period__meta">${p.start}–${p.end} · ${p.room}</div>
+      </div>`;
+  }).join('');
+
+  const statusEl = $('#ribbonStatus');
+  if(nowMin < dayStart){
+    statusEl.textContent = `First expense at ${SCHEDULE[0].start}`;
+  } else if(nowMin > dayEnd){
+    statusEl.textContent = `End of day — balance: $1,234.56`;
+  } else {
+    const current = SCHEDULE.find(p => nowMin>=toMin(p.start) && nowMin<=toMin(p.end));
+    statusEl.textContent = current ? `Current: ${current.subject} · $${Math.floor(Math.random()*100)+20}` : `Between transactions`;
+  }
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function renderStats(){
+  const dueThisWeek = assignments.filter(a=>a.status!=='done' && a.offset>=0 && a.offset<=7).length;
+  const overdue = assignments.filter(a=>a.status!=='done' && a.offset<0).length;
+  const completed = assignments.filter(a=>a.status==='done').length;
+  const grades = assignments.filter(a=>a.grade!=null).map(a=>a.grade);
+  const avg = grades.length ? Math.round(grades.reduce((a,b)=>a+b,0)/grades.length) : 0;
+
+  const cards = [
+    { label:'Pending expenses', num:dueThisWeek, color:'var(--violet)', tint:'var(--violet-tint)',
+      icon:'<path d="M4 9.5h16M8 3v4M16 3v4"/><rect x="4" y="5" width="16" height="15" rx="2"/>' },
+    { label:'Overdue', num:overdue, color:'var(--coral)', tint:'var(--coral-tint)',
+      icon:'<circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/>' },
+    { label:'Recorded', num:completed, color:'var(--green)', tint:'var(--green-tint)',
+      icon:'<path d="m5 13 4 4L19 7"/>' },
+    { label:'Budget status', num:avg+'%', color:'var(--teal)', tint:'var(--teal-tint)',
+      icon:'<path d="M5 20V10M12 20V4M19 20v-7"/>' },
+  ];
+
+  $('#statsGrid').innerHTML = cards.map(c => `
+    <div class="stat-card">
+      <div class="stat-card__top">
+        <div class="stat-card__icon" style="background:${c.tint}; color:${c.color}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${c.icon}</svg>
+        </div>
+      </div>
+      <div class="stat-card__num">${c.num}</div>
+      <div class="stat-card__label">${c.label}</div>
+    </div>`).join('');
+
+  $('#dueBadge').textContent = dueThisWeek + overdue;
+}
+
+/* ============================================================
+   FILTER CHIPS
+   ============================================================ */
+function renderFilters(){
+  const subjects = Object.keys(SUBJECTS);
+  const chips = ['all', ...subjects];
+  $('#filters').innerHTML = chips.map(s => {
+    const active = activeFilter===s ? 'is-active' : '';
+    const dot = s==='all' ? '' : `<span class="chip__dot" style="background:${SUBJECTS[s].color}"></span>`;
+    return `<button class="chip ${active}" data-filter="${s}">${dot}${s==='all'?'All categories':s}</button>`;
+  }).join('');
+  $$('#filters .chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeFilter = btn.dataset.filter; renderFilters(); renderBoard(); });
+  });
+}
+
+/* ============================================================
+   BOARD (kanban)
+   ============================================================ */
+const COLUMNS = [
+  { key:'todo',  label:'Unrecorded' },
+  { key:'doing', label:'Processing' },
+  { key:'done',  label:'Recorded' },
+];
+
+function renderBoard(){
+  const grid = $('#boardGrid');
+  const visible = assignments.filter(a=>{
+    const matchesSubject = activeFilter==='all' || a.subject===activeFilter;
+    const matchesSearch = a.title.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSubject && matchesSearch;
+  });
+
+  grid.innerHTML = COLUMNS.map(col => {
+    const items = visible.filter(a=>a.status===col.key);
+    return `
+      <div class="column">
+        <div class="column__head">
+          <h3>${col.label}</h3>
+          <span class="column__count">${items.length}</span>
+        </div>
+        <div class="column__list">
+          ${items.length ? items.map(cardHTML).join('') : '<div class="column__empty">Nothing here</div>'}
+        </div>
+      </div>`;
+  }).join('');
+
+  $$('.card').forEach(el=>{
+    el.addEventListener('click', ()=> openModal(Number(el.dataset.id)));
+  });
+  $$('.card__action').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); advance(Number(btn.dataset.id)); });
+  });
+}
+
+function cardHTML(a){
+  const meta = SUBJECTS[a.subject];
+  const due = dueLabel(a.offset, a.status);
+  const nextLabel = a.status==='todo' ? 'Log' : a.status==='doing' ? 'Confirm' : 'Edit';
+  return `
+    <div class="card" data-id="${a.id}">
+      <div class="card__top">
+        <span class="tag" style="background:${meta.tint}; color:${meta.color}">${a.subject}</span>
+        <span class="card__due ${due.overdue?'is-overdue':''}">${due.text}</span>
+      </div>
+      <div class="card__title">${a.title}</div>
+      <div class="card__bar"><div class="card__bar-fill" style="width:${a.progress}%; background:${meta.color}"></div></div>
+      <div class="card__foot">
+        <span class="card__room">At ${a.room}</span>
+        <button class="card__action" data-id="${a.id}">${nextLabel}</button>
+      </div>
+    </div>`;
+}
+
+function advance(id){
+  const a = assignments.find(x=>x.id===id);
+  if(!a) return;
+  if(a.status==='todo'){ a.status='doing'; a.progress=Math.max(a.progress,25); }
+  else if(a.status==='doing'){ a.status='done'; a.progress=100; if(a.grade==null) a.grade = 85 + Math.floor(Math.random()*13); }
+  else { a.status='todo'; a.progress=0; }
+  renderAll();
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(id){
+  const a = assignments.find(x=>x.id===id);
+  if(!a) return;
+  const meta = SUBJECTS[a.subject];
+  const due = dueLabel(a.offset, a.status);
+  const dateStr = dueDate(a.offset).toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
+  const nextLabel = a.status==='todo' ? 'Mark as processing' : a.status==='doing' ? 'Mark as recorded' : 'Recorded ✓';
+
+  $('#modal').innerHTML = `
+    <div class="modal__top">
+      <span class="tag" style="background:${meta.tint}; color:${meta.color}">${a.subject}</span>
+      <button class="modal__close" id="modalClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <h3>${a.title}</h3>
+    <p class="desc">View and manage this expense entry. Track where your money goes and move it through the workflow as you process it.</p>
+    <div class="modal__row"><span>Date</span><strong class="${due.overdue?'is-overdue':''}">${dateStr}</strong></div>
+    <div class="modal__row"><span>Location</span><strong>${a.room}</strong></div>
+    <div class="modal__row"><span>Progress</span><strong>${a.progress}%</strong></div>
+    ${a.grade!=null ? `<div class="modal__row"><span>Amount</span><strong>$${a.grade}</strong></div>` : ''}
+    <button class="modal__cta" id="modalCta" ${a.status==='done'?'disabled':''}>${nextLabel}</button>
+  `;
+  $('#modalOverlay').classList.add('is-open');
+  $('#modalClose').addEventListener('click', closeModal);
+  $('#modalCta').addEventListener('click', ()=>{ advance(id); closeModal(); });
+}
+function closeModal(){ $('#modalOverlay').classList.remove('is-open'); }
+$('#modalOverlay').addEventListener('click', e=>{ if(e.target.id==='modalOverlay') closeModal(); });
+
+/* ============================================================
+   COURSES
+   ============================================================ */
+function renderCourses(){
+  const categories = Object.entries(SUBJECTS).map(([name, meta]) => {
+    const items = assignments.filter(a=>a.subject===name);
+    const spent = items.filter(a=>a.status==='done').length;
+    const total = items.length;
+    const pct = Math.round(spent/total*100);
+    return { name, meta, pct, spent, total };
+  });
+  $('#coursesGrid').innerHTML = categories.map(c => `
+    <div class="course" style="--c:${c.meta.color};--p:${c.pct}">
+      <div class="ring">
+        <div class="ring__hole">${c.pct}%</div>
+      </div>
+      <div class="course__body">
+        <h3>${c.name}</h3>
+        <p>${c.spent}/${c.total} expenses logged</p>
+        <div class="course__next">Budget: $500/mo</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+$$('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    const target = btn.dataset.scroll;
+    if(target) $(target)?.scrollIntoView({behavior:'smooth'});
+    $('#sidebar').classList.remove('is-open');
+  });
+});
+
+$('#menuToggle').addEventListener('click', ()=>{
+  $('#sidebar').classList.toggle('is-open');
+});
+
+$('#searchInput').addEventListener('input', (e)=>{
+  searchTerm = e.target.value;
+  renderBoard();
+});
+
+/* ============================================================
+   GREETING
+   ============================================================ */
+function updateGreeting(){
+  const h = new Date().getHours();
+  const greeting = h<12 ? 'Good morning' : h<18 ? 'Good afternoon' : 'Good evening';
+  $('#greeting').textContent = greeting;
+  $('#dateLine').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+}
+
+/* ============================================================
+   RENDER ALL
+   ============================================================ */
+function renderAll(){
+  renderRibbon();
+  renderStats();
+  renderFilters();
+  renderBoard();
+  renderCourses();
+  updateGreeting();
+}
+
+// Initial render
+renderAll();
+// Update ribbon every minute
+setInterval(renderRibbon, 60000);
+</script>
+</body>
+</html>

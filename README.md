@@ -13,7 +13,7 @@ A beautiful, responsive budget tracking dashboard designed to help you manage yo
 - **Modal interactions** for viewing expense details
 - **Smooth animations** and transitions
 
-## 🎯 What's Been Built (Phase 1 - HTML/CSS/UI)
+## Completed feature set
 
 ✅ Complete responsive layout with sidebar navigation  
 ✅ Dashboard with today's balance ribbon  
@@ -27,17 +27,13 @@ A beautiful, responsive budget tracking dashboard designed to help you manage yo
 ✅ Accessibility features (semantic HTML, ARIA labels, keyboard navigation)  
 ✅ Professional styling with custom design tokens  
 
-## 🚀 What's Coming Next (Phase 2 - JavaScript)
+The final capstone includes:
 
-💻 **Next week we'll add:**
-
-- Full calculation and math functionality
-- Add/edit/delete expense entries
-- Real data persistence (local storage or backend)
-- Budget tracking and limits per category
-- Automatic calculations (totals, averages, remaining budget)
-- Export and reporting features
-- Charts and data visualization
+- Reusable ES module exports in `budget.js` for `calculateTotal()` and `renderExpenses()`
+- Calculated recorded-expense totals shown in the dashboard
+- Bootstrap 5 CDN integration with responsive grid, button, and form utilities
+- Interactive expense workflow, category filters, search, and detail modals
+- Responsive layout tested at desktop, tablet, and mobile widths
 
 ## 📱 Features
 
@@ -64,7 +60,8 @@ A beautiful, responsive budget tracking dashboard designed to help you manage yo
 
 - **HTML5**: Semantic markup with accessibility features
 - **CSS3**: Custom properties (CSS variables), Grid, Flexbox, animations
-- **JavaScript**: Vanilla JS (no frameworks) with modular code organization
+- **JavaScript**: Vanilla JS ES modules with modular calculation and rendering logic
+- **Bootstrap 5**: CDN utilities for responsive layout, buttons, and form controls
 - **Fonts**: Google Fonts (Space Grotesk, Inter, IBM Plex Mono)
 - **Icons**: Inline SVGs for small file size
 
@@ -98,7 +95,8 @@ cd Publish-Your-Budget-Tracker-Live
 
 ```
 Publish-Your-Budget-Tracker-Live/
-├── index.html           # Main application (HTML + CSS + JS)
+├── index.html           # Main application and UI event wiring
+├── budget.js            # Exported budget calculations and expense rendering
 ├── README.md           # This file
 └── .gitignore          # Git ignore file
 ```
